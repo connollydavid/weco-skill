@@ -1,6 +1,6 @@
 # Weco AI Skill
 
-AI-powered code optimization skill for Claude Code and Cursor.
+AI-powered code optimization skill for Claude Code, Cursor, and opencode.
 
 ## What is this?
 
@@ -29,6 +29,7 @@ pipx install weco
 ```bash
 weco setup cursor       # For Cursor
 weco setup claude-code  # For Claude Code
+weco setup opencode     # For opencode
 ```
 
 ### What Gets Installed
@@ -51,11 +52,22 @@ weco setup claude-code  # For Claude Code
 **Cursor:**
 ```
 ~/.cursor/
+├── rules/
+│   └── weco.mdc        # Always-on trigger rule
 └── skills/
     └── weco/
         ├── SKILL.md       # Full optimization workflow
         ├── references/    # Advanced documentation
         └── assets/        # Template evaluation scripts
+```
+
+**opencode:**
+```
+~/.config/opencode/skills/weco/
+├── SKILL.md           # Full workflow; opencode advertises the skill from
+│                      # the frontmatter description (no trigger file needed)
+├── references/        # Advanced documentation
+└── assets/            # Template evaluation scripts
 ```
 
 ## Usage
@@ -75,7 +87,7 @@ The skill offers two modes:
 ## Requirements
 
 - [Weco CLI](https://weco.ai/docs/cli) installed and authenticated
-- Claude Code or Cursor
+- Claude Code, Cursor, or opencode
 
 ## Files
 
@@ -92,7 +104,8 @@ weco-skill/
 ├── snippets/             # Trigger snippets (used by weco-cli installer)
 │   ├── claude.md         # Claude Code trigger
 │   ├── claude-global.md  # Claude Code global trigger
-│   └── cursor.md         # Cursor trigger (.mdc rule)
+│   ├── cursor.md         # Cursor trigger (.mdc rule)
+│   └── opencode.md       # opencode trigger (frontmatter description is primary)
 ├── references/           # Advanced documentation
 │   ├── benchmarking.md
 │   ├── ml-evaluation.md

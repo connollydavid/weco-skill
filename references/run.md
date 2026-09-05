@@ -142,4 +142,4 @@ tail -n 40 .weco/run.log
 weco run status <run-id>
 ```
 
-When the run is launched as a Claude Code background task (`run_in_background: true`), check it with `TaskOutput(task_id, block: false)` instead — always `block: false`, never `block: true` or a `timeout`. A blocking watch (`tail -f`, `block: true`, `Monitor`, `watch`) pins you to the run and makes you unresponsive to the user.
+When the run is launched as a background task, check the task's output non-blocking instead (in Claude Code, a `run_in_background: true` task with `TaskOutput(task_id, block: false)` — always `block: false`, never `block: true` or a `timeout`). A blocking watch (`tail -f`, `block: true`, `Monitor`, `watch`) pins you to the run and makes you unresponsive to the user.

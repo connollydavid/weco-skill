@@ -347,12 +347,12 @@ Write the evaluation script and wrapper automatically.
 
 ### Step 7: Run Optimization
 
-**Start Weco as a background task (use `run_in_background`):**
+**Start Weco as a background task:**
 
-Use Claude Code's built-in background task feature to avoid repeated permission prompts:
+Run the command as a background task in your harness; where the harness has a run-in-background option it also avoids repeated permission prompts:
 
 ```bash
-# Run with run_in_background: true
+# Launch as a background task (Claude Code: run_in_background: true)
 # Single file:
 weco run \
   --source .weco/$WECO_TASK/optimize.<ext> \
@@ -374,7 +374,7 @@ weco run \
 
 Use `--sources` when the optimization spans multiple tightly coupled files. Weco will optimize all specified files simultaneously.
 
-Set `run_in_background: true` on this Bash command. This returns a task ID you can check with `TaskOutput` without needing repeated bash permissions.
+Run this command as a background task. In Claude Code, set `run_in_background: true`: it returns a task ID you can check non-blocking with `TaskOutput` without needing repeated bash permissions. Other harnesses with a background-shell feature work the same way.
 
 **Save the run ID** from the weco output — you'll need it for status checks, steering, and results.
 
@@ -388,15 +388,15 @@ weco run status <run-id>
 
 Returns JSON with `status`, `current_step`, `total_steps`, `best_metric`, `best_step`, and `pending_nodes`. Use this as your primary progress check.
 
-**Never watch a run with a blocking or streaming command** (`tail -f`, `Monitor`, `watch`, following the log). Those pin you to the run and make you unresponsive — use only the quick `weco run status` poll above (it returns immediately) plus a non-blocking `TaskOutput`.
+**Never watch a run with a blocking or streaming command** (`tail -f`, `Monitor`, `watch`, following the log). Those pin you to the run and make you unresponsive — use only the quick `weco run status` poll above (it returns immediately) plus a non-blocking check of the background task's output.
 
-**Also check `TaskOutput`** to scan for evaluation errors:
+**Also check the background task's output** to scan for evaluation errors. In Claude Code:
 
 ```
 TaskOutput(task_id: "<task_id_from_background_bash>", block: false)
 ```
 
-`TaskOutput` must always use `block: false`. **Never set `block: true` or pass a `timeout`** — that turns it into a blocking watch and pins you to the run, exactly like `tail -f`. Poll, read, hand control back.
+`TaskOutput` must always use `block: false`. **Never set `block: true` or pass a `timeout`** — that turns it into a blocking watch and pins you to the run, exactly like `tail -f`. The rule generalizes: poll the task's output non-blocking in whatever form your harness offers. Poll, read, hand control back.
 
 ---
 
@@ -443,7 +443,7 @@ After installing, the next Weco step picks up the fix automatically.
 Each cycle is a quick, non-blocking poll, so you hand control back between cycles instead of sitting on a blocking watch. Keep monitoring automatically — but a user message ALWAYS takes priority over the next poll:
 
 1. Check status: `weco run status <run-id>` for structured progress (heed its `agent_guidance` field)
-2. Check `TaskOutput(task_id, block: false)` to scan for eval errors
+2. Check the background task's output (Claude Code: `TaskOutput(task_id, block: false)`) to scan for eval errors
 3. **Has the user said anything? If so, handle it before polling again** — acknowledge, then act: steer with `weco run derive` (works mid-run, no need to stop first), abort with `weco run stop`, or answer their question
 4. If running + no errors → brief progress update, then check again in 30-60s
 5. If error → ask user to confirm fix (e.g. install missing package), then check again
@@ -463,7 +463,7 @@ When the user wants to try a different approach, add constraints, or continue ex
 weco run derive <run-id> --from-step best -i "<user's direction>" --output plain
 ```
 
-Set `run_in_background: true` on the derive command — it creates the new run and enters the optimization loop immediately. See `references/derive.md` for full details.
+Run the derive command as a background task — it creates the new run and enters the optimization loop immediately. See `references/derive.md` for full details.
 
 **Dashboard derive requests:** the user can also compose derived runs in the dashboard ("Explore a new path"). You'll receive a `[Dashboard derive request]` message listing the exact `weco run derive` commands — launch each one as a background task without waiting between them (the first becomes the lineage's evaluation consumer; the rest attach behind it), then report the new run IDs and add them ALL to your monitoring loop. With multiple runs in flight, use `weco run overview <run-id>` (any run in the lineage) to see the global best and tree across the whole set in one call, instead of polling each run separately.
 
@@ -758,12 +758,12 @@ Iterate until aligned, then proceed to full run.
 
 ### Phase 8: Full Optimization with Monitoring
 
-**Start Weco as a background task (use `run_in_background`):**
+**Start Weco as a background task:**
 
-Use Claude Code's built-in background task feature to avoid repeated permission prompts:
+Run the command as a background task in your harness; where the harness has a run-in-background option it also avoids repeated permission prompts:
 
 ```bash
-# Run with run_in_background: true
+# Launch as a background task (Claude Code: run_in_background: true)
 # Single file:
 weco run \
   --source .weco/$WECO_TASK/optimize.<ext> \
@@ -785,19 +785,19 @@ weco run \
 
 Use `--sources` when the optimization spans multiple tightly coupled files. Weco will optimize all specified files simultaneously.
 
-Set `run_in_background: true` on this Bash command. This returns a task ID you can check with `TaskOutput` without needing repeated bash permissions.
+Run this command as a background task. In Claude Code, set `run_in_background: true`: it returns a task ID you can check non-blocking with `TaskOutput` without needing repeated bash permissions. Other harnesses with a background-shell feature work the same way.
 
 **Save the run ID** from the weco output — you'll need it for status checks, steering, and results.
 
-**Monitor with `weco run status` and `TaskOutput`:**
+**Monitor with `weco run status` and the background task's output:**
 
 ```bash
 weco run status <run-id>
 ```
 
-Returns JSON with `status`, `current_step`, `total_steps`, `best_metric`, `best_step`, and `pending_nodes`. Use this as your primary progress check. Also check `TaskOutput(task_id, block: false)` to scan for evaluation errors. `TaskOutput` must always use `block: false` — **never set `block: true` or pass a `timeout`**, which turns it into a blocking watch that pins you to the run, exactly like `tail -f`.
+Returns JSON with `status`, `current_step`, `total_steps`, `best_metric`, `best_step`, and `pending_nodes`. Use this as your primary progress check. Also check the background task's output (in Claude Code, `TaskOutput(task_id, block: false)`) to scan for evaluation errors. A task-output check must always be non-blocking — **never use a blocking form or a `timeout`**, which turns it into a blocking watch that pins you to the run, exactly like `tail -f`.
 
-**Never watch a run with a blocking or streaming command** (`tail -f`, `Monitor`, `watch`, following the log). Those pin you to the run and make you unresponsive to the user. Use only the quick `weco run status` poll (it returns immediately) plus the non-blocking `TaskOutput` above.
+**Never watch a run with a blocking or streaming command** (`tail -f`, `Monitor`, `watch`, following the log). Those pin you to the run and make you unresponsive to the user. Use only the quick `weco run status` poll (it returns immediately) plus the non-blocking task-output check above.
 
 ---
 
@@ -844,7 +844,7 @@ After installing, the next Weco step picks up the fix automatically.
 Each cycle is a quick, non-blocking poll, so you hand control back between cycles instead of sitting on a blocking watch. Keep monitoring automatically — but a user message ALWAYS takes priority over the next poll:
 
 1. Check status: `weco run status <run-id>` for structured progress (heed its `agent_guidance` field)
-2. Check `TaskOutput(task_id, block: false)` to scan for eval errors
+2. Check the background task's output (Claude Code: `TaskOutput(task_id, block: false)`) to scan for eval errors
 3. **Has the user said anything? If so, handle it before polling again** — acknowledge, then act: steer with `weco run derive` (works mid-run, no need to stop first), abort with `weco run stop`, or answer their question
 4. If running + no errors → brief progress update, then check again in 30-60s
 5. If error → ask user to confirm fix (e.g. install missing package), then check again
@@ -864,7 +864,7 @@ When the user wants to try a different approach, add constraints, or continue ex
 weco run derive <run-id> --from-step best -i "<user's direction>" --output plain
 ```
 
-Set `run_in_background: true` — derive automatically stops the current run (cancels the in-flight step, interrupts active candidates), creates a new one, and enters the optimization loop immediately. See `references/derive.md` for details.
+Run it as a background task — derive automatically stops the current run (cancels the in-flight step, interrupts active candidates), creates a new one, and enters the optimization loop immediately. See `references/derive.md` for details.
 
 **Dashboard derive requests:** the user can also compose derived runs in the dashboard ("Explore a new path"). You'll receive a `[Dashboard derive request]` message listing the exact `weco run derive` commands — launch each one as a background task without waiting between them (the first becomes the lineage's evaluation consumer; the rest attach behind it), then report the new run IDs and add them ALL to your monitoring loop. With multiple runs in flight, use `weco run overview <run-id>` (any run in the lineage) to see the global best and tree across the whole set in one call, instead of polling each run separately.
 
@@ -1083,7 +1083,7 @@ If refactoring was done (consolidated from multiple files):
 
 ## Skill Optimization
 
-Weco can optimize agent skills themselves — using Weco to improve the instructions that guide an agent's behavior. Works with skills for Claude Code, Cursor, or any agent that uses system prompts.
+Weco can optimize agent skills themselves — using Weco to improve the instructions that guide an agent's behavior. Works with skills for Claude Code, Cursor, opencode, or any agent that uses system prompts.
 
 **⚠️ IMPORTANT: Before starting skill optimization, you MUST read `references/eval-skill.md` in full.** It contains the complete evaluation harness, scenario generation guidelines, and statistical validation procedures.
 
@@ -1277,7 +1277,7 @@ For advanced topics, see the `references/` directory:
 - `references/benchmarking.md` — Statistical rigor for timing
 - `references/ml-evaluation.md` — Avoiding overfitting
 - `references/gpu-profiling.md` — CUDA timing with events
-- `references/eval-skill.md` — Evaluating agent skills (Claude Code, Cursor, etc.)
+- `references/eval-skill.md` — Evaluating agent skills (Claude Code, Cursor, opencode, etc.)
 - `references/eval-llm-judge.md` — LLM-as-judge evaluation for prompts
 - `references/multi-file.md` — Multi-file optimization with `--sources` and extraction patterns
 - `references/limitations.md` — When NOT to use Weco
