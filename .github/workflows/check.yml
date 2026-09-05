@@ -1,0 +1,23 @@
+name: Check
+
+# Package invariants: skill frontmatter, snippet consistency, executable
+# bits, and installer placement against a throwaway HOME. No network, no
+# harness binaries.
+
+on:
+  push:
+    branches: [main, "series/**"]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install pytest
+        run: pip install pytest
+      - name: Run package checks
+        run: python -m pytest tests/ -q

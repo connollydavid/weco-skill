@@ -101,7 +101,7 @@ Derive whenever the user gives a new direction — you don't need to wait for th
 
 In both cases:
 
-1. **User gives a direction** → `weco run derive <run-id> --from-step best -i "..." --output plain` with `run_in_background: true`
+1. **User gives a direction** → `weco run derive <run-id> --from-step best -i "..." --output plain`, launched as a background task
 2. **Monitor** → same monitoring loop as any other run
 
 The user doesn't need to know about run IDs, the parent being stopped, or lineage mechanics. From their perspective, you're just "trying a different approach." The run boundaries are an implementation detail.

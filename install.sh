@@ -2,7 +2,7 @@
 set -e
 
 # Weco Skill Installer
-# Installs the Weco optimization skill for Claude Code and/or Cursor
+# Installs the Weco optimization skill for Claude Code, Cursor, and/or opencode
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SKILL_FILE="$SCRIPT_DIR/SKILL.md"
@@ -26,9 +26,10 @@ fi
 echo "Which AI coding assistant do you use?"
 echo "  1) Claude Code"
 echo "  2) Cursor"
-echo "  3) Both"
+echo "  3) opencode"
+echo "  4) All of the above"
 echo ""
-read -p "Enter choice [1-3]: " choice
+read -p "Enter choice [1-4]: " choice
 
 install_claude() {
     local dest_dir="$HOME/.claude/skills/weco"
@@ -97,6 +98,35 @@ install_cursor() {
     echo -e "${GREEN}Cursor installation complete!${NC}"
 }
 
+install_opencode() {
+    local dest_dir="$HOME/.config/opencode/skills/weco"
+
+    echo -e "${BLUE}Installing for opencode...${NC}"
+
+    # Create skills directory (user-global opencode skills root)
+    mkdir -p "$dest_dir"
+
+    # Copy skill files; opencode advertises skills from the SKILL.md
+    # frontmatter description, so no trigger transform is needed.
+    cp "$SKILL_FILE" "$dest_dir/SKILL.md"
+    echo -e "  ${GREEN}✓${NC} Installed SKILL.md"
+
+    # Copy references directory if it exists
+    if [[ -d "$SCRIPT_DIR/references" ]]; then
+        cp -r "$SCRIPT_DIR/references" "$dest_dir/"
+        echo -e "  ${GREEN}✓${NC} Installed references/"
+    fi
+
+    # Copy assets directory if it exists
+    if [[ -d "$SCRIPT_DIR/assets" ]]; then
+        cp -r "$SCRIPT_DIR/assets" "$dest_dir/"
+        echo -e "  ${GREEN}✓${NC} Installed assets/"
+    fi
+
+    echo -e "  ${GREEN}✓${NC} Installed to $dest_dir"
+    echo -e "${GREEN}opencode installation complete!${NC}"
+}
+
 case $choice in
     1)
         install_claude
@@ -105,9 +135,14 @@ case $choice in
         install_cursor
         ;;
     3)
+        install_opencode
+        ;;
+    4)
         install_claude
         echo ""
         install_cursor
+        echo ""
+        install_opencode
         ;;
     *)
         echo -e "${RED}Invalid choice${NC}"
