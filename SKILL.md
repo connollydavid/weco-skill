@@ -1280,6 +1280,7 @@ For advanced topics, see the `references/` directory:
 - `references/eval-skill.md` — Evaluating agent skills (Claude Code, Cursor, opencode, etc.)
 - `references/eval-llm-judge.md` — LLM-as-judge evaluation for prompts
 - `references/multi-file.md` — Multi-file optimization with `--sources` and extraction patterns
+- `references/local-mode.md` — Local mode: no Weco endpoints, the harness provides the intelligence
 - `references/limitations.md` — When NOT to use Weco
 
 ---
