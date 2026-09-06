@@ -27,9 +27,10 @@ echo "Which AI coding assistant do you use?"
 echo "  1) Claude Code"
 echo "  2) Cursor"
 echo "  3) opencode"
-echo "  4) All of the above"
+echo "  4) ZCode"
+echo "  5) All of the above"
 echo ""
-read -p "Enter choice [1-4]: " choice
+read -p "Enter choice [1-5]: " choice
 
 install_claude() {
     local dest_dir="$HOME/.claude/skills/weco"
@@ -127,6 +128,37 @@ install_opencode() {
     echo -e "${GREEN}opencode installation complete!${NC}"
 }
 
+install_zcode() {
+    local dest_dir="$HOME/.zcode/skills/weco"
+
+    echo -e "${BLUE}Installing for ZCode...${NC}"
+
+    # Create skills directory (ZCode's user-global skills root)
+    mkdir -p "$dest_dir"
+
+    # Copy skill files; ZCode advertises skills from the SKILL.md
+    # frontmatter description, so no trigger transform is needed.
+    cp "$SKILL_FILE" "$dest_dir/SKILL.md"
+    echo -e "  ${GREEN}✓${NC} Installed SKILL.md"
+
+    # Copy references directory if it exists
+    if [[ -d "$SCRIPT_DIR/references" ]]; then
+        cp -r "$SCRIPT_DIR/references" "$dest_dir/"
+        echo -e "  ${GREEN}✓${NC} Installed references/"
+    fi
+
+    # Copy assets directory if it exists
+    if [[ -d "$SCRIPT_DIR/assets" ]]; then
+        cp -r "$SCRIPT_DIR/assets" "$dest_dir/"
+        echo -e "  ${GREEN}✓${NC} Installed assets/"
+    fi
+
+    echo -e "  ${GREEN}✓${NC} Installed to $dest_dir"
+    echo -e "${GREEN}ZCode installation complete!${NC}"
+    echo ""
+    echo -e "${YELLOW}Tip:${NC} run ${BLUE}weco setup zcode --zai-endpoint intl|zh${NC} to wire the z.ai MCP servers."
+}
+
 case $choice in
     1)
         install_claude
@@ -138,11 +170,16 @@ case $choice in
         install_opencode
         ;;
     4)
+        install_zcode
+        ;;
+    5)
         install_claude
         echo ""
         install_cursor
         echo ""
         install_opencode
+        echo ""
+        install_zcode
         ;;
     *)
         echo -e "${RED}Invalid choice${NC}"

@@ -30,6 +30,7 @@ pipx install weco
 weco setup cursor       # For Cursor
 weco setup claude-code  # For Claude Code
 weco setup opencode     # For opencode
+weco setup zcode        # For ZCode (also wires the z.ai MCP servers)
 ```
 
 ### What Gets Installed
@@ -70,6 +71,21 @@ weco setup opencode     # For opencode
 └── assets/            # Template evaluation scripts
 ```
 
+**ZCode:**
+```
+~/.zcode/skills/weco/
+├── SKILL.md           # Full workflow; ZCode discovers user-global skills here
+│                      # (a .agents/skills/weco workspace install works too)
+├── references/        # Advanced documentation
+└── assets/            # Template evaluation scripts
+```
+
+`weco setup zcode` also merges the z.ai MCP servers (web search, web
+reader, zread, and the vision stdio server) into the workspace
+`.zcode/config.json` for either region
+(`--zai-endpoint intl|zh`), with the API key referenced through the
+`Z_AI_API_KEY` environment variable rather than written into the file.
+
 ## Usage
 
 Once installed, just ask your AI assistant to optimize code:
@@ -87,7 +103,7 @@ The skill offers two modes:
 ## Requirements
 
 - [Weco CLI](https://weco.ai/docs/cli) installed and authenticated
-- Claude Code, Cursor, or opencode
+- Claude Code, Cursor, opencode, or ZCode
 
 ## Files
 
