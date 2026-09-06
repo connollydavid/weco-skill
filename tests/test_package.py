@@ -62,10 +62,8 @@ def test_version_file_is_three_component() -> None:
 def test_trigger_snippets_are_consistent() -> None:
     snippets = ROOT / "snippets"
     claude = (snippets / "claude.md").read_bytes()
-    cursor = (snippets / "cursor.md").read_bytes()
-    opencode = (snippets / "opencode.md").read_bytes()
-    assert claude == cursor
-    assert claude == opencode
+    for name in ("cursor.md", "opencode.md", "zcode.md"):
+        assert claude == (snippets / name).read_bytes(), name
 
 
 def test_recorded_executable_bits() -> None:
@@ -89,12 +87,14 @@ def test_recorded_executable_bits() -> None:
         ("1", [".claude/skills/weco/SKILL.md", ".claude/skills/weco/CLAUDE.md"]),
         ("2", [".cursor/skills/weco/SKILL.md", ".cursor/rules/weco.mdc"]),
         ("3", [".config/opencode/skills/weco/SKILL.md"]),
+        ("4", [".zcode/skills/weco/SKILL.md"]),
         (
-            "4",
+            "5",
             [
                 ".claude/skills/weco/SKILL.md",
                 ".cursor/skills/weco/SKILL.md",
                 ".config/opencode/skills/weco/SKILL.md",
+                ".zcode/skills/weco/SKILL.md",
             ],
         ),
     ],
