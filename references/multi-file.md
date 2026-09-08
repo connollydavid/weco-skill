@@ -14,7 +14,7 @@ Weco supports optimizing multiple files simultaneously using the `--sources` fla
 Pass multiple files directly to Weco:
 
 ```bash
-weco run --sources model.py utils.py config.py \
+weco local run --eval-command ... \
   --eval-command "bash .weco/evaluate.sh" \
   --metric accuracy \
   --goal maximize \
@@ -69,7 +69,7 @@ cp path/to/utils.py .weco/<task>/utils.py.baseline
 Then run:
 
 ```bash
-weco run --sources .weco/<task>/model.py .weco/<task>/utils.py \
+weco local run --eval-command ... \
   --eval-command "bash .weco/<task>/evaluate.sh" \
   --metric speedup \
   --goal maximize \

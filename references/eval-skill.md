@@ -142,7 +142,7 @@ cp SKILL.md .weco/task/baseline.md
 cp -r references/ .weco/task/references/
 
 # 2. Run weco optimization (only optimizes optimize.md)
-weco run --source .weco/task/optimize.md --eval-command "bash .weco/task/evaluate.sh" --metric skill_quality --goal maximize
+weco local run --eval-command "bash .weco/task/evaluate.sh" --metric skill_quality --goal maximize
 
 # 3. Apply changes back
 cp .weco/task/optimize.md SKILL.md
@@ -1197,7 +1197,7 @@ python measure_baseline.py .weco/task/baseline.md
 # Output: mean=3.5, std_dev=0.17, n_runs=3
 
 # 3. Run optimization (single evaluation per step)
-weco run \
+weco local run \
   --source .weco/task/optimize.md \
   --eval-command "bash .weco/task/evaluate.sh" \
   --metric skill_quality \
@@ -1224,7 +1224,7 @@ cp .weco/task/optimize.md SKILL.md
 ## Running the Optimization
 
 ```bash
-weco run \
+weco local run \
   --source .weco/task/optimize.md \
   --eval-command "bash .weco/task/evaluate.sh" \
   --metric skill_quality \

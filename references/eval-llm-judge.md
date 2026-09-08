@@ -881,7 +881,7 @@ python measure_baseline.py .weco/task/baseline.txt
 # Output: mean=3.7, std_dev=0.15, n_runs=5
 
 # 5. Run optimization (single evaluation per step)
-weco run \
+weco local run \
   --source .weco/task/optimize.txt \
   --eval-command "bash .weco/task/evaluate.sh" \
   --metric prompt_quality \
