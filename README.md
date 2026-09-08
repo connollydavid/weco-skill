@@ -1,27 +1,27 @@
 # Weco AI Skill
 
-AI-powered code optimization skill for Claude Code, Cursor, and opencode.
+AI-powered code optimization skill for Claude Code, Cursor, opencode, and ZCode. Runs locally: no cloud service, no account, no telemetry.
 
 ## What is this?
 
-This skill teaches your AI coding assistant how to use [Weco](https://weco.ai) for code optimization. When you ask to "make this faster" or "improve accuracy", the assistant will:
+This skill teaches your AI coding assistant the local Weco optimization workflow. When you ask to "make this faster" or "improve accuracy", the assistant will:
 
 1. Analyze your code and environment
 2. Set up an evaluation benchmark
-3. Run Weco's optimization engine
-4. Present results with a detailed report
+3. Run the local optimization loop (the assistant's harness provides the intelligence)
+4. Present results with the numbers against the baseline
 5. Apply changes (with your approval)
 
 ## Installation
 
 ### Recommended: Weco CLI
 
-The easiest way to install is via the [Weco CLI](https://weco.ai/docs/cli), which sets up the skill and trigger rules for your agent.
+The easiest way to install is via the Weco CLI, which sets up the skill and trigger rules for your agent.
 
-**Install the CLI:**
+**Install the CLI (from this fork):**
 
 ```bash
-pipx install weco
+uv tool install "weco @ git+https://github.com/connollydavid/weco-cli.git"
 ```
 
 **Install the skill:**
@@ -41,13 +41,7 @@ weco setup zcode        # For ZCode (also wires the z.ai MCP servers)
 ├── CLAUDE.md          # Trigger snippet (Claude reads this)
 ├── SKILL.md           # Full optimization workflow
 ├── references/        # Advanced documentation
-│   ├── benchmarking.md
-│   ├── ml-evaluation.md
-│   └── ...
 └── assets/            # Template evaluation scripts
-    ├── evaluate-speed.py
-    ├── evaluate-accuracy.py
-    └── ...
 ```
 
 **Cursor:**
@@ -71,38 +65,21 @@ weco setup zcode        # For ZCode (also wires the z.ai MCP servers)
 └── assets/            # Template evaluation scripts
 ```
 
-**ZCode:**
-```
-~/.zcode/skills/weco/
-├── SKILL.md           # Full workflow; ZCode discovers user-global skills here
-│                      # (a .agents/skills/weco workspace install works too)
-├── references/        # Advanced documentation
-└── assets/            # Template evaluation scripts
-```
-
-`weco setup zcode` also merges the z.ai MCP servers (web search, web
-reader, zread, and the vision stdio server) into the workspace
-`.zcode/config.json` for either region
-(`--zai-endpoint intl|zh`), with the API key referenced through the
-`Z_AI_API_KEY` environment variable rather than written into the file.
-
 ## Usage
 
 Once installed, just ask your AI assistant to optimize code:
 
-- "Make this function faster using /weco"
-- "Optimize this for speed using /weco"
-- "Improve the accuracy of this model using /weco"
-- "Reduce the latency using /weco"
+- "Make this function faster"
+- "Optimize this for speed"
+- "Improve the accuracy of this model"
 
-The skill offers two modes:
-
-- **Vibe Mode**: Minimal questions, maximum action. Great for simple optimizations.
-- **Assistant Scientist Mode**: Collaborative, educational. Best for complex cases or learning.
+The skill guides the local workflow: baseline, evaluation setup, the loop
+(`weco local run`) or manual tracking (`weco observe`), and a numbered
+report. See `references/local-mode.md` for the contract.
 
 ## Requirements
 
-- [Weco CLI](https://weco.ai/docs/cli) installed and authenticated
+- The Weco CLI (from this fork; the upstream PyPI package carries the cloud CLI)
 - Claude Code, Cursor, opencode, or ZCode
 
 ## Files
@@ -121,7 +98,8 @@ weco-skill/
 │   ├── claude.md         # Claude Code trigger
 │   ├── claude-global.md  # Claude Code global trigger
 │   ├── cursor.md         # Cursor trigger (.mdc rule)
-│   └── opencode.md       # opencode trigger (frontmatter description is primary)
+│   ├── opencode.md       # opencode trigger (frontmatter description is primary)
+│   └── zcode.md          # ZCode trigger
 ├── references/           # Advanced documentation
 │   ├── benchmarking.md
 │   ├── ml-evaluation.md

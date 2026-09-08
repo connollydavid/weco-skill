@@ -51,7 +51,7 @@ print(f"loss: {loss:.6f}")
 For loss metrics, use `--goal minimize`:
 
 ```bash
-weco run ... --metric loss --goal minimize
+weco local run --eval-command ... --metric loss --goal minimize
 ```
 
 ## Best Practices

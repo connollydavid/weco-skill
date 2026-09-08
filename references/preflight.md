@@ -89,7 +89,7 @@ npm install  # or yarn install, pnpm install
 
 **Other languages:** Use the standard dependency installation command for the language's package manager.
 
-**Key point:** Install now, not later. Discovering missing packages during optimization step 3 of 10 wastes time and Weco credits.
+**Key point:** Install now, not later. Discovering missing packages mid-optimization wastes time and evaluation budget.
 
 ### 4. Verify .env Accessibility
 

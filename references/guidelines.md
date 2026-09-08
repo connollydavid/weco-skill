@@ -17,7 +17,7 @@ Do NOT add restrictive constraints in `--additional-instructions` unless the use
 **GOOD** (let Weco explore):
 ```bash
 # No additional instructions - Weco will try any approach
-weco run --source ... --eval-command ... --metric speedup --goal maximize
+weco local run --eval-command ... --metric speedup --goal maximize
 ```
 
 Only add constraints if the user specifically requests them:
@@ -90,7 +90,7 @@ Dataset sources:
 ALWAYS use `--output plain` for automation:
 
 ```bash
-weco run ... --output plain
+weco local run ...
 ```
 
 The `plain` mode produces machine-readable output suitable for log parsing and automation. The `rich` mode is for interactive terminal use only.

@@ -50,7 +50,7 @@ print(f"training_time: {training_time:.4f}")
 For training time, use `--goal minimize`:
 
 ```bash
-weco run ... --metric training_time --goal minimize
+weco local run --eval-command ... --metric training_time --goal minimize
 ```
 
 ## Best Practices
